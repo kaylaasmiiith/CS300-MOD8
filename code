@@ -1,0 +1,114 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+// Define the Course class
+class Course {
+public:
+    string courseNumber;
+    string courseTitle;
+    vector<string> prerequisites;
+
+    Course(string number, string title, vector<string> prereqs) {
+        courseNumber = number;
+        courseTitle = title;
+        prerequisites = prereqs;
+    }
+};
+
+// Function to open and read course data from file
+vector<Course> readCourseData() {
+    vector<Course> courses = {
+        Course("CSCI100", "Introduction to Computer Science", {}),
+        Course("CSCI101", "Introduction to Programming in C++", {"CSCI100"}),
+        Course("CSCI200", "Data Structures", {"CSCI101"}),
+        Course("MATH201", "Discrete Mathematics", {}),
+        Course("CSCI300", "Introduction to Algorithms", {"CSCI200", "MATH201"}),
+        Course("CSCI301", "Advanced Programming in C++", {"CSCI101"}),
+        Course("CSCI350", "Operating Systems", {"CSCI300"}),
+        Course("CSCI400", "Large Software Development", {"CSCI301", "CSCI350"})
+    };
+
+    return courses;
+}
+
+// Function to print a list of courses
+void printCourseList(const vector<Course>& courses) {
+    vector<Course> sortedCourses = courses;
+    sort(sortedCourses.begin(), sortedCourses.end(), [](const Course& a, const Course& b) {
+        return a.courseNumber < b.courseNumber;
+    });
+
+    cout << "Alphanumeric list of all courses in the Computer Science department:" << endl;
+    for (const auto& course : sortedCourses) {
+        cout << course.courseNumber << " - " << course.courseTitle << endl;
+    }
+}
+
+// Function to print course information and prerequisites
+void printCourseInfo(const vector<Course>& courses, const string& courseNumber) {
+    auto it = find_if(courses.begin(), courses.end(), [&courseNumber](const Course& course) {
+        return course.courseNumber == courseNumber;
+    });
+
+    if (it != courses.end()) {
+        cout << "Course Number: " << it->courseNumber << endl;
+        cout << "Course Title: " << it->courseTitle << endl;
+        if (!it->prerequisites.empty()) {
+            cout << "Prerequisites: ";
+            for (const auto& prereq : it->prerequisites) {
+                cout << prereq << " ";
+            }
+            cout << endl;
+        }
+    } else {
+        cout << "Course not found." << endl;
+    }
+}
+
+// Main function
+int main() {
+    vector<Course> courses = readCourseData();
+
+    // Menu
+    while (true) {
+        cout << "Menu:" << endl;
+        cout << "1. Load Data Structure" << endl;
+        cout << "2. Print Course List" << endl;
+        cout << "3. Print Course" << endl;
+        cout << "9. Exit" << endl;
+        cout << "Enter your choice: ";
+        
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                // Load Data Structure function
+                cout << "Loading Data Structure..." << endl;
+                break;
+            case 2:
+                printCourseList(courses);
+                break;
+            case 3: {
+                string courseNumber;
+                cout << "Enter course number: ";
+                cin >> courseNumber;
+                printCourseInfo(courses, courseNumber);
+                break;
+            }
+            case 9:
+                cout << "Exiting program." << endl;
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}
