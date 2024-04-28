@@ -1,0 +1,325 @@
+Vector Data Structure Pseudocode:
+
+FUNCTION openFile(fileName):
+    TRY:
+        file = OPEN fileName
+        RETURN file
+    EXCEPT FileNotFoundError:
+        PRINT "File not found"
+        RETURN None
+
+FUNCTION parseCourseData(line):
+    courseData = SPLIT line BY ","
+    IF LENGTH(courseData) < 2 OR LENGTH(courseData) > 3:
+        PRINT "Invalid format: Each line must have at least two parameters (course number and title) and at most three (with prerequisites)"
+        RETURN None
+    IF LENGTH(courseData) == 3 AND courseData[2] NOT IN listOfCourses:
+        PRINT "Invalid format: Prerequisite does not exist"
+        RETURN None
+    RETURN courseData
+
+PROCEDURE main():
+    coursesVector = EMPTY VECTOR
+    fileName = "CourseInformation.txt" // assuming the file name is CourseInformation.txt
+    file = openFile(fileName)
+    IF file != None:
+        FOR line IN file:
+            courseData = parseCourseData(line)
+            IF courseData != None:
+                course = CREATE CourseObject WITH courseData[0], courseData[1], courseData[2] (if exists)
+                APPEND course TO coursesVector
+        CLOSE file
+
+FUNCTION findAndPrintCourse(courseNumber):
+    found = False
+    FOR course IN coursesVector:
+        IF course.courseNumber EQUALS courseNumber:
+            PRINT "Course Number:", course.courseNumber
+            PRINT "Course Title:", course.courseTitle
+            IF course.prerequisites != None:
+                PRINT "Prerequisites:", course.prerequisites
+            found = True
+            BREAK
+    IF NOT found:
+        PRINT "Course not found"
+
+main()
+
+
+
+
+Hash Table Data Structure Pseudocode:
+
+FUNCTION openFile(fileName):
+    TRY:
+        file = OPEN fileName
+        RETURN file
+    EXCEPT FileNotFoundError:
+        PRINT "File not found"
+        RETURN None
+
+FUNCTION parseCourseData(line):
+    courseData = SPLIT line BY ","
+    IF LENGTH(courseData) < 2 OR LENGTH(courseData) > 3:
+        PRINT "Invalid format: Each line must have at least two parameters (course number and title) and at most three (with prerequisites)"
+        RETURN None
+    IF LENGTH(courseData) == 3 AND courseData[2] NOT IN listOfCourses:
+        PRINT "Invalid format: Prerequisite does not exist"
+        RETURN None
+    RETURN courseData
+
+PROCEDURE main():
+    coursesHashTable = EMPTY HASH TABLE
+    fileName = "CourseInformation.txt" // assuming the file name is CourseInformation.txt
+    file = openFile(fileName)
+    IF file != None:
+        FOR line IN file:
+            courseData = parseCourseData(line)
+            IF courseData != None:
+                course = CREATE CourseObject WITH courseData[0], courseData[1], courseData[2] (if exists)
+                INSERT course INTO coursesHashTable USING course.courseNumber
+        CLOSE file
+
+FUNCTION findAndPrintCourse(courseNumber):
+    course = coursesHashTable.GET(courseNumber)
+    IF course != None:
+        PRINT "Course Number:", course.courseNumber
+        PRINT "Course Title:", course.courseTitle
+        IF course.prerequisites != None:
+            PRINT "Prerequisites:", course.prerequisites
+    ELSE:
+        PRINT "Course not found"
+
+main()
+
+
+
+
+
+
+Tree Data Structure Pseudocode:
+
+FUNCTION openFile(filename):
+    TRY:
+        file = OPEN(filename, 'r')
+        RETURN file
+    EXCEPT IOError:
+        PRINT "Error: Could not open file."
+        RETURN None
+
+FUNCTION readDataFromFile(file):
+    coursesTree = TREE()  // Initialize an empty tree data structure
+    WHILE NOT EOF(file):
+        line = READLINE(file)
+        IF isValidFormat(line):
+            courseData = parseLine(line)
+            course = createCourse(courseData)
+            coursesTree.insert(course.courseNumber, course)
+        ELSE:
+            PRINT "Error: Invalid format in file."
+    RETURN coursesTree
+
+FUNCTION isValidFormat(line):
+    tokens = SPLIT(line, ',')
+    IF LENGTH(tokens) < 2:
+        RETURN False
+    ELSE:
+        RETURN True
+
+FUNCTION parseLine(line):
+    tokens = SPLIT(line, ',')
+    courseNumber = tokens[0]
+    courseTitle = tokens[1]
+    prerequisites = []
+    IF LENGTH(tokens) > 2:
+        FOR i FROM 2 TO LENGTH(tokens) - 1:
+            prerequisites.append(tokens[i])
+    RETURN (courseNumber, courseTitle, prerequisites)
+
+FUNCTION createCourse(courseData):
+    course = COURSE()
+    course.courseNumber = courseData[0]
+    course.courseTitle = courseData[1]
+    course.prerequisites = courseData[2]
+    RETURN course
+
+FUNCTION printCourseInformation(coursesTree):
+    PRINT "Course Information:"
+    coursesTree.traverseInOrder(printCourseDetails)
+
+FUNCTION printCourseDetails(course):
+    PRINT "Course Number:", course.courseNumber
+    PRINT "Course Title:", course.courseTitle
+    PRINT "Prerequisites:", course.prerequisites
+
+
+Pseudocode and Runtime Analysis
+
+Vector Data Structure Pseudocode:
+Runtime Analysis:
+
+      -    Opening and reading the file: O(n)
+-	Parsing each line and creating course objects: O(n)
+-	Printing course information and prerequisites: O(n)
+
+
+Hash Table Data Structure Pseudocode:
+Runtime Analysis:
+-	Opening and reading the file: O(n)
+-	Parsing each line and creating course objects: O(n)
+-	Storing course objects in a hash table: O(1) (assuming constant time for hash table insertion)
+-	Printing course information and prerequisites: O(1) (assuming constant time for hash table retrieval)
+
+
+Tree Data Structure Pseudocode:
+Runtime Analysis:
+-	Opening and reading the file: O(n)
+-	Parsing each line and creating course objects: O(n)
+-	Storing course objects in a tree: O(log n) (assuming balanced binary search tree)
+-	Printing course information and prerequisites: O(n) (traversing the tree in-order)
+
+
+Evaluation of Each Data Structure
+
+Vector:
+Advantages:
+-	Simple implementation.
+-	Allows sequential access to elements.
+Disadvantages:
+-	Inefficient for searching and insertion (O(n)).
+-	Memory overhead due to dynamic resizing.
+
+
+
+Hash Table:
+Advantages:
+-	Fast retrieval (O(1)) when keys are known.
+-	Efficient for large datasets.
+Disadvantages:
+-	Hash collisions may degrade performance.
+-	Not suitable for tasks requiring ordered traversal.
+
+
+Tree:
+Advantages:
+-	Efficient searching (O(log n)) for balanced trees.
+-	Maintains sorted order of elements.
+Disadvantages:
+-	Overhead of maintaining balance (for self-balancing trees like AVL or Red-Black).
+-	Slightly more complex implementation compared to vectors or hash tables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Pseudocode for Opening File, Reading Data, Parsing Each Line, and Checking for Formatting Errors:
+
+FUNCTION openFile(fileName):
+    TRY:
+        file = OPEN fileName
+        RETURN file
+    EXCEPT FileNotFoundError:
+        PRINT "File not found"
+        RETURN None
+
+FUNCTION parseCourseData(line):
+    courseData = SPLIT line BY ","
+    IF LENGTH(courseData) < 2 OR LENGTH(courseData) > 3:
+        PRINT "Invalid format: Each line must have at least two parameters (course number and title) and at most three (with prerequisites)"
+        RETURN None
+    IF LENGTH(courseData) == 3 AND courseData[2] NOT IN listOfCourses:
+        PRINT "Invalid format: Prerequisite does not exist"
+        RETURN None
+    RETURN courseData
+
+PROCEDURE main():
+    fileName = "CourseInformation.txt" // assuming the file name is CourseInformation.txt
+    file = openFile(fileName)
+    IF file != None:
+        FOR line IN file:
+            courseData = parseCourseData(line)
+            IF courseData != None:
+                // Process course data or store it in data structure
+        CLOSE file
+
+Pseudocode for Printing Course Information and Prerequisites:
+
+FUNCTION printCourseInformation(course):
+    PRINT "Course Number:", course.courseNumber
+    PRINT "Course Title:", course.courseTitle
+    IF course.prerequisites != None:
+        PRINT "Prerequisites:", course.prerequisites
+
+
+
+
+Pseudocode for Printing Course List in Alphanumeric Order:
+
+FUNCTION printCourseList(courseStructure):
+    SORT courseStructure BY courseNumber
+    FOR course IN courseStructure:
+        PRINT course.courseNumber, course.courseTitle
+
+
+
+
+
+
+
+Pseudocode for Menu:
+
+FUNCTION menu():
+    WHILE True:
+        PRINT "Menu:"
+        PRINT "1. Load Data Structure"
+        PRINT "2. Print Course List"
+        PRINT "3. Print Course"
+        PRINT "4. Exit"
+        choice = GET_INPUT("Enter your choice: ")
+        SWITCH choice:
+            CASE "1":
+                // Call function to load data structure
+            CASE "2":
+                // Call function to print course list
+            CASE "3":
+                // Call function to print course
+            CASE "4":
+                EXIT_PROGRAM()
+            DEFAULT:
+                PRINT "Invalid choice. Please try again."
+
+
+Recommendation:
+
+Vector: Simple but inefficient for this scenario due to linear time complexity for searching and insertion.
+Hash Table: Offers fast retrieval and efficient storage, making it suitable for the requirements of the advising program.
+Tree: Slightly less efficient than a hash table due to logarithmic time complexity for searching, but still a viable option.
+
+
+Conclusion:
+I recommend using a hash table for storing the course data in the advising program. It provides fast retrieval (constant time complexity) and efficient storage, aligning well with the program's requirements. While a tree could also be considered, the hash table's constant time complexity for retrieval makes it a more optimal choice in this scenario.
+
+
